@@ -22,10 +22,21 @@ class DeliveryTest {
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
         var daysToAddForSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
-        // TODO: добавить логику теста в рамках которого будет выполнено планирование и перепланирование встречи.
-        // Для заполнения полей формы можно использовать пользователя validUser и строки с датами в переменных
-        // firstMeetingDate и secondMeetingDate. Можно также вызывать методы generateCity(locale),
-        // generateName(locale), generatePhone(locale) для генерации и получения в тесте соответственно города,
-        // имени и номера телефона без создания пользователя в методе generateUser(String locale) в датагенераторе
+        $("[data-test-id=city] input").setValue(validUser.getCity());
+        $("[data-test-id=date] input").setValue(firstMeetingDate);
+        $("[data-test-id=name] input").setValue(validUser.getName());
+        $("[data-test-id=phone] input").setValue(validUser.getPhone());
+        $("[data-test-id=agreement]").click();
+        $("[class=button__text]").click();
+        $("[data-test-id=success-notification]").shouldBe(Condition.visible).shouldHave(Condition.text("Успешно! Встреча успешно запланирована на " + firstMeetingDate));
+        $("[data-test-id=date] input").doubleClick().sendKeys(Keys.DELETE);
+        $("[data-test-id=date] input").setValue(secondMeetingDate);
+        $("[class=button__text]").click();
+        $("[data-test-id=replan-notification] .notification__content").shouldBe(Condition.visible).shouldHave(Condition.text("У вас уже запланирована встреча на другую дату. Перепланировать?"));
+        $x("//*[contains(text(),Перепланировать)]").click();
+        $("[data-test-id=success-notification]").shouldHave(Condition.visible, Condition.text("Успешно! Встреча успешно запланирована на " + secondMeetingDate));
+
+
+
     }
 }
