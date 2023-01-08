@@ -1,17 +1,21 @@
 package ru.netology.delivery.test;
 
+import  com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
 
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
 
 class DeliveryTest {
 
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
+        $("[data-test-id=date] input").doubleClick().sendKeys(Keys.DELETE);
     }
 
     @Test
@@ -35,7 +39,6 @@ class DeliveryTest {
         $("[data-test-id=replan-notification] .notification__content").shouldBe(Condition.visible).shouldHave(Condition.text("У вас уже запланирована встреча на другую дату. Перепланировать?"));
         $x("//*[contains(text(),Перепланировать)]").click();
         $("[data-test-id=success-notification]").shouldHave(Condition.visible, Condition.text("Успешно! Встреча успешно запланирована на " + secondMeetingDate));
-
 
 
     }
